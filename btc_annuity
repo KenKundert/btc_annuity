@@ -55,7 +55,7 @@ from docopt import docopt
 from quantiphy import Quantity
 from inform import display, render, warn
     # to install these packages, use:
-    #     pip3 install --user --upgrade quantiphy inform
+    #     pip3 install --user --upgrade docopt inform quantiphy
 
 class Dollars(Quantity):
     prec = 2
