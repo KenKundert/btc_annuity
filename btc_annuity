@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+"""
+BTC Annuity
+
+Usage:
+    btc_annuity
+
+Will print the results of two scenarios. In both scenarios you start with an 
+initial investment of bitcoin from which you draw out a fixed amount of dollars 
+per year to live on.
+
+Scenario 1.
+    A tax free scenario where each year you simply take a loan against your 
+    bitcoin on BlockFi.
+
+Scenario 2.
+    You sell enough bitcoin every year to cover your expenses and pay taxes
+    on the amount sold.
+
+Assumptions:
+    annual draw = $100k     -- the amount needed each year
+
+    interest rate = 4.5%    -- interest rate on borrowed dollars
+    origination fee = 2%    -- relative loan fees
+    fees = $650             -- absolute loan fees
+    max LTV = 50%           -- maximum allowed loan to value of BTC
+
+    collateral = 10 BTC     -- amount of bitcoin used as collateral
+    BTC price = $60k        -- starting price of bitcoin
+    BTC growth rate = 25%   -- expected annual growth rate of bitcoin price
+
+    tax rate = 25%          -- tax rate
+
+To adjust the assumptions, simply change the values in the source and re-run.
+
+A table is printed for each scenario where:
+    Draw:
+        Is the actual draw from reserves, the amount over $100k is the 
+        additional amount needed to cover cost of loans and taxes.
+    Owed:
+        The total accumulated amount borrowed assuming you never repay your␣
+        loans.
+    LTV:
+        Loan to value of collateral.
+    Left:
+        Number of bitcoin remaining from initial BTC investment.
+    Net:
+        Value of your remaining collateral minus any amount owed in loans.
+    BTC:
+        Price of bitcoin.
+"""
+    # To adjust the assumptions, simply change the values above and re-run.
+
+from docopt import docopt
+from quantiphy import Quantity
+from inform import display, render, warn
+    # to install these packages, use:
+    #     pip3 install --user --upgrade quantiphy inform
+
+class Dollars(Quantity):
+    prec = 2
+    units = '$'
+    strip_zeros = False
+
+class Percent(Quantity):
+    prec = 1
+    form = 'fixed'
+    units = '%'
+    strip_zeros = False
+
+class BTC(Quantity):
+    prec = 1
+    form = 'fixed'
+    units = 'BTC'
+    strip_zeros = False
+
+cmdline = docopt(__doc__)
+params = Quantity.extract(__doc__)
+
+display('Parameters:')
+for k, v in params.items():
+    k = k.replace(' ', '_')
+    globals()[k.replace(' ', '_')] = v
+    display(f'    {v:Q}')
+
+display()
+display(f'Tax Free Living on {annual_draw} per year:')
+display('    Year:   Draw    Owed     LTV     Net  |    BTC')
+owed = Dollars(0)
+warned = False
+for year in range(20):
+    actual_draw = Dollars(
+        (annual_draw + fees + owed*interest_rate/100)
+      / (1 - origination_fee/100 - interest_rate/100)
+    )
+    owed = owed.add(actual_draw)
+    btc = Dollars(BTC_price*(1+BTC_growth_rate/100)**year)
+    cv = Dollars(collateral*btc)
+    net = Dollars(cv - owed)
+    ltv = Percent(100 * owed / cv)
+    if ltv > max_LTV:
+        if not warned:
+            warn(f'maximum loan to value limit of {max_LTV} exceeded.')
+            warned = True
+    display(f'{year:>8}: {actual_draw:>6}  {owed:>6}  {ltv:>6}  {net:>6}  | {btc:>6}')
+
+display()
+display(f'Taxed Living on {annual_draw} per year:')
+display('    Year:   Draw         Left        Net  |    BTC')
+owed = Dollars(0)
+warned = False
+btc_remaining = collateral
+for year in range(20):
+    actual_draw = Dollars(annual_draw / (1 - tax_rate/100))
+    btc = Dollars(BTC_price*(1+BTC_growth_rate/100)**year)
+    btc_remaining = BTC(btc_remaining.add(-actual_draw/btc))
+    net = Dollars(btc_remaining*btc)
+
+    display(f'{year:>8}: {actual_draw:>6}  {btc_remaining:>11.2}  {net:>9}  | {btc:>6}')
