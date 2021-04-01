@@ -92,6 +92,6 @@ LTV:
 Left:
     Number of bitcoin remaining from initial BTC investment.
 Net:
-    Value of your remaining collateral minus any amount owed in loans.
+    Dollar value of your remaining BTC minus any amount owed in loans.
 BTC:
-    Price of bitcoin.
+    Price of one bitcoin.
