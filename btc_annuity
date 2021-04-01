@@ -113,5 +113,4 @@ for year in range(20):
     btc = Dollars(BTC_price*(1+BTC_growth_rate/100)**year)
     btc_remaining = btc_remaining.add(-actual_draw/btc)
     net = Dollars(btc_remaining*btc)
-
     display(f'{year+1:>8}: {actual_draw:>6}  {btc_remaining:>11.2}  {net:>9}  | {btc:>6}')
