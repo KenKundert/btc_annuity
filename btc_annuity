@@ -35,7 +35,7 @@ To adjust the assumptions, simply change the values in the source and re-run.
 
 A table is printed for each scenario where:
     Draw:
-        Is the actual draw from reserves, the amount over $100k is the 
+        Is the actual draw from reserves, the amount over annual draw is the 
         additional amount needed to cover cost of loans and taxes.
     Owed:
         The total accumulated amount borrowed assuming you never repay your␣
