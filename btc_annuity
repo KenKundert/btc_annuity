@@ -90,8 +90,8 @@ owed = Dollars(0)
 warned = False
 for year in range(20):
     actual_draw = Dollars(
-        (annual_draw + fees + owed*interest_rate/100)
-      / (1 - origination_fee/100 - interest_rate/100)
+        (annual_draw + fees + owed*interest_rate/100) /
+        (1 - origination_fee/100 - interest_rate/100)
     )
     owed = owed.add(actual_draw)
     btc = Dollars(BTC_price*(1+BTC_growth_rate/100)**year)
