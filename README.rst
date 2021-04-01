@@ -6,8 +6,9 @@ an initial investment in bitcoin, and then converts a small amount each year to
 dollars.  In both scenarios you start with 10 BTC from which you draw out $100k 
 per year to live on.  The first is a tax free scenario where each year you 
 simply take a loan against your bitcoin on BlockFi.  This approach does not 
-consume the bitcoin. The second is where you sell enough bitcoin every year to 
-cover your expenses.
+consume the bitcoin but builds up debt. The second is where you sell enough 
+bitcoin every year to cover your expenses.  This does not build up debt, but 
+does consume the bitcoin.
 
 **Assumptions**::
 
