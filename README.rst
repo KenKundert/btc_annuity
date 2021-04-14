@@ -95,3 +95,27 @@ Net:
     Dollar value of your remaining BTC minus any amount owed in loans.
 BTC:
     Price of one bitcoin.
+
+
+Updates
+-------
+
+Digging further into using BlockFi for this strategy I found that BlockFi is 
+both not suitable and not very honest.  Despite advertising a rate of 4.5%, when 
+I started the loan process they informed me that the rate is really 9.75%.  
+Furthermore, they require interest-only payments every month, which amounts to 
+just less than 1% of borrowed amount per month.  If they don't get them they 
+impose fees and may sell your collateral.
+
+You can reduce the interest rate somewhat by posting more collateral (35% LTV 
+gets you to 7.9%), but you cannot get it down to the promised 4.5% region (use 
+to require 20% LTV but now appears to be gone).
+
+
+Outlook
+-------
+
+In retrospect, it seems unlikely that this particular strategy will work because 
+there is no cash flow for the lender.  The lender does slowly gather more and 
+more BTC over time, but with no predictable end date when they can actually 
+collect it.
