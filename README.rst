@@ -109,5 +109,5 @@ $/BTC:
 
 Comments
 --------
-Coinbase uses the `Morpho platform <morpho.org>`_ for lending.  The interest 
-rate varies over time.  At the moment the rate is 6.22%.
+Coinbase uses the `Morpho platform <https://morpho.org>`_ for lending.  The 
+interest rate varies over time.  At the moment the rate is 6.22%.
