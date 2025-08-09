@@ -38,7 +38,6 @@ And here is the result of simulating the two scenarios.
 
 **Scenario 1: Tax Free Living on $100k per year**::
 
-Tax Free Living on $100k per year:
     Year:   Draw    Owed     LTV     Net  |  $/BTC
        1:  $100k      $0   0.0 %   $1.2M  |  $120k
        2:  $103k   $100k   7.2 %  $1.28M  |  $138k
@@ -63,7 +62,6 @@ Tax Free Living on $100k per year:
 
 **Taxed Living on $100k per year**::
 
-Taxed Living on $100k per year:
     Year:   Draw         Left        Net  |  $/BTC
        1:  $133k     8.89 BTC     $1.07M  |  $120k
        2:  $137k     7.89 BTC     $1.09M  |  $138k
