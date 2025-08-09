@@ -19,15 +19,16 @@ Scenario 2.
 
 Assumptions:
     annual draw = $100k     -- the amount needed each year
+    inflation rate = 3%     -- the amount the draw increases each year
 
-    interest rate = 4.5%    -- interest rate on borrowed dollars
-    origination fee = 2%    -- relative loan fees
-    fees = $650             -- absolute loan fees
-    max LTV = 50%           -- maximum allowed loan to value of BTC
+    interest rate = 7.5%    -- interest rate on borrowed dollars
+    origination fee = 0%    -- relative loan fees
+    fees = $0               -- absolute loan fees
+    max LTV = 86%           -- maximum allowed loan to value of BTC
 
     collateral = 10 BTC     -- amount of bitcoin used as collateral
-    BTC price = $60k        -- starting price of bitcoin
-    BTC growth rate = 25%   -- expected annual growth rate of bitcoin price
+    BTC price = $120k       -- starting price of bitcoin
+    BTC growth rate = 15%   -- expected annual growth rate of bitcoin price
 
     tax rate = 25%          -- tax rate
 
@@ -36,7 +37,7 @@ To adjust the assumptions, simply change the values in the source and re-run.
 A table is printed for each scenario where:
     Draw:
         Is the actual draw from reserves, the amount over annual draw is the 
-        additional amount needed to cover cost of loans and taxes.
+        additional amount needed to cover cost of loans, taxes and inflation.
     Owed:
         The total accumulated amount borrowed assuming you never repay your␣
         loans.
@@ -46,7 +47,7 @@ A table is printed for each scenario where:
         Number of bitcoin remaining from initial BTC investment.
     Net:
         Value of your remaining collateral minus any amount owed in loans.
-    BTC:
+    $/BTC:
         Price of bitcoin.
 """
     # To adjust the assumptions, simply change the values above and re-run.
@@ -60,7 +61,7 @@ from inform import display, render, warn
 class Dollars(Quantity):
     prec = 2
     units = '$'
-    strip_zeros = False
+    strip_zeros = True
 
 class Percent(Quantity):
     prec = 1
@@ -85,15 +86,12 @@ for k, v in params.items():
 
 display()
 display(f'Tax Free Living on {annual_draw} per year:')
-display('    Year:   Draw    Owed     LTV     Net  |    BTC')
+display('    Year:   Draw    Owed     LTV     Net  |  $/BTC')
 owed = Dollars(0)
+draw = Dollars(annual_draw)
 warned = False
 for year in range(20):
-    actual_draw = Dollars(
-        (annual_draw + fees + owed*interest_rate/100) /
-        (1 - origination_fee/100 - interest_rate/100)
-    )
-    owed = owed.add(actual_draw)
+    actual_draw = Dollars((draw + fees) / (1 - origination_fee/100))
     btc = Dollars(BTC_price*(1+BTC_growth_rate/100)**year)
     cv = Dollars(collateral*btc)
     net = Dollars(cv - owed)
@@ -104,13 +102,18 @@ for year in range(20):
             warned = True
     display(f'{year+1:>8}: {actual_draw:>6}  {owed:>6}  {ltv:>6}  {net:>6}  | {btc:>6}')
 
+    owed = Dollars(owed + draw)
+    draw = Dollars(draw*(1+inflation_rate/100))
+
 display()
 display(f'Taxed Living on {annual_draw} per year:')
-display('    Year:   Draw         Left        Net  |    BTC')
+display('    Year:   Draw         Left        Net  |  $/BTC')
 btc_remaining = BTC(collateral)
+draw = Dollars(annual_draw)
 for year in range(20):
-    actual_draw = Dollars(annual_draw / (1 - tax_rate/100))
+    actual_draw = Dollars(draw / (1 - tax_rate/100))
     btc = Dollars(BTC_price*(1+BTC_growth_rate/100)**year)
     btc_remaining = btc_remaining.add(-actual_draw/btc)
     net = Dollars(btc_remaining*btc)
     display(f'{year+1:>8}: {actual_draw:>6}  {btc_remaining:>11.2}  {net:>9}  | {btc:>6}')
+    draw = Dollars(draw*(1+inflation_rate/100))
